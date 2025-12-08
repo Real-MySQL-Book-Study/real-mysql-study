@@ -1,6 +1,0 @@
-{
-  "showLogs": false,
-  "requireGitRepo": true,
-  "commitOnlyIfChanges": true,
-  "includeTimestamp": true
-}
