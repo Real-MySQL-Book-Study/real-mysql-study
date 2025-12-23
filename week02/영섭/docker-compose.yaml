@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: reservation-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: hospital
+      MYSQL_USER: hospital_user
+      MYSQL_PASSWORD: hospital1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      # 슬로우 쿼리 로그 활성화
+      - --slow_query_log=1
+      - --long_query_time=0.1
+      - --log_output=TABLE
+      # InnoDB 설정
+      - --innodb_lock_wait_timeout=10
+      - --innodb_print_all_deadlocks=1
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot1234"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  mysql_data:
